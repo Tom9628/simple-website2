@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drive Car</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <style>
+        body{
+            background-image: url(road.jpg);
+            background-size: cover;
+            /* background-color: blue; */
+        }
+        .container{
+            margin-bottom: 0px;
+            flex-flow: column;
+            /* margin-top:50px; */
+        }
+        .motor_road{
+            width: 100%;
+            height: 250px;
+            background-color: hsla(195, 40%, 60%, 0.319);
+            background-size: cover;
+            margin: 0px;
+            border: 3px dotted yellow;
+            border-style: dotted none;
+            position: relative;
+            margin-left: 0px;
+            margin-right: 0px;
+            margin-top: 20px;
+            border-style: dotted none;
+            flex-direction: column;
+        }
+        .car_road{
+            width: 100%;
+            height: 250px;
+            background-color: hsla(261, 46%, 38%, 0.319);
+            background-size: cover;
+            border: 3px dotted yellow;
+            /* margin-top:10px;
+            margin-bottom: 100px; */
+            position: relative;
+            margin-left: 0px;
+            margin-right: 0px;
+            border-style: dotted none;
+        }
+        .motor{
+            width: 50px;
+            position: relative;
+            top:-250px;
+            left: 0px;
+        }
+        #motor{
+            width: 100px;
+            position: absolute;
+            top:100px;
+            left: 50px;
+        }
+        #car{
+            width: 150px;
+            position: relative;
+            left: 0px;
+            top:-200px;
+        }
+        /* .header{
+            text-align: center;
+            background-color: chartreuse;
+            background-size: cover;
+            height: 100px;
+            position: relative;
+            top: 40px;
+        } */
+        h1{
+             
+        }
+        .text{
+            text-align: center;
+            font-size: 50px;
+            /* margin-top: 60px; */
+            padding: 10px auto;
+            font-style: italic;
+            color: hsla(74, 81%, 71%, 0.8);
+            /* font-size: 5em; */
+            margin: 0px;
+            display: flex;
+            justify-content: space-between;
+        }
+        #startbtn{
+            background-color: green;
+            width: 100px;
+            height:60px;
+            margin-top: 50px;
+            border-radius: 25px;
+            font-weight: 100;
+            margin-left:10px;
+            color:white;
+            font-weight: 10px;
+        }
+        #speedbtn{
+            background-color: green;
+            width: 100px;
+            height:60px;
+            margin-top: 50px;
+            border-radius: 25px;
+            margin-right:10px;
+            color:white;
+        }
+        #speedbtn:hover,#startbtn:hover{
+            opacity: 0.7;
+            transition: opacity 0.15s;
+        }
+        #speedbtn:disabled,#startbtn:disabled{
+            opacity: 0.1;
+        }
+
+        p.text{
+            
+        }
+        #motor_speed{
+            color: black;
+            font-size: 50px;
+            position: relative;
+            float: left;
+        }
+        #car_speed{
+            color: black;
+            font-size: 50px;
+            position: relative;
+            float: left;
+        }
+    </style>
+</head>
+<body>
+   <div class="container">
+
+        <div class="motor_road">
+            <div id="motor_speed"></div>
+            <img src="motor.png" id="motor" alt="motor is lost">
+        </div>
+        <div class="text">
+            <div>
+                <button id = "startbtn" onclick="start()">START</button>
+                <audio id="sound" autoplay>
+                    <source src = "acceleration.mp3" type="audio/mp3">
+                </audio>
+                <!-- <button id = "resetbtn" onclick="reset()">RESET</button> -->
+            </div>
+            
+            <p>Ninja ZX-10R VS Farrari F430</p>
+
+            <button id = "speedbtn" onclick="speed()">Shift</button>
+        </div>
+        <div class="car_road"></div>
+            <!-- <div id="car_speed"></div> -->
+            <img src="fararri.webp" id="car" alt="farrari is lost">
+        <div class="footer"></div>
+   </div>
+
+
+
+
+  <script>
+     let i = 10; 
+     let to = true;
+    //  let offset;
+     let timer;
+     let offset1;
+     let delay1;
+     let delay2;
+     let wait1 = Math.random() * 10;
+     let wait2 = Math.random() * 10;
+     let clock1;
+    let clock2;
+    let spent1;
+    let spent2;
+    // let speed1;
+    // let speed2;
+     //  set farrari drive.
+    //   speed increment every
+    let up1 = 0;
+    let up2 = 0;
+    let speedM = 1;
+    let speedC = 1.2;
+    let speed1 = 1;
+    let speed2 = 1.2;
+    speed1 = speed1 + speedM*up1;
+    speed2 = speed2 + speedC*up2;
+     function setMargin(offset1,delay1){
+        spent1 = new Date()-clock1;
+        offset1 = speed1;
+        let string = "<b> Current Speed is  "+ speed1*100 +"&nbsp km/h &nbsp </b>"
+        $('#motor_speed').html(string);
+        if(!to && i <= 100){
+           if(spent2 == null || spent1 < spent2){
+                alert("You won, finished in "+ spent1 + "ms");
+                // return;
+           }else{
+                alert("You lose, finished in "+ spent1 + "ms");
+           }
+           $('audio').attr("muted","true");
+           clearInterval(timer);
+        }
+        // console.log(wait);
+        if(to && i >= (window.innerWidth+100 + delay1)){
+            to = false;
+            // i = 0;
+        }
+        // when come back , change image and change offset
+        if(!to){
+            offset1 = -offset1;
+            // if($('#motor').css("motor") !="motor-left.jpg"){
+            $('#motor').attr("src","motor-left.png");
+    
+        }
+        i += offset1;
+        // console.log("i: "+ i);
+        $('#motor').css("margin-left",i+"px");
+     }
+    //  for motor
+    let j = 10; 
+    let to2= true;
+    let timer2;
+    // let delay2 = false;
+     function setMargin2(offset2,delay2){
+        // console.log("to: "+ to);
+        // return to start point, end 
+        // $('#speed2').text(speed2*200 + "km/h");
+        let string = "<b> Current Speed is  "+ speed2*200 +"&nbsp km/h &nbsp </b>"
+        $('#car_speed').html(string);
+        if(!to2 && j <= 100){
+            clearInterval(timer2);
+            $('audio').attr("muted","true");
+            // document.getElementById("audio").muted = true;
+            spent2 = new Date()-clock2;
+        }
+        // console.log(wait2);
+        if(to && j >= (window.innerWidth+100 + delay2)){
+            to2 = false;
+        }
+        // when come back , change image and change offset
+        if(!to2){
+            offset2 = -offset2;
+            if($('#motor').attr("motor") !="motor-left.jpg"){
+                $('#car').attr("src","fararri-left.png");
+                $('#car').attr("margin-right","0px");
+            }
+        }
+        j += offset2;
+        // console.log("j: "+ j);
+        $('#car').css("margin-left",j+"px");
+     }
+   
+    function start(){
+        // if(!to && i <= 10 || !to2 && j <= 10){
+        //     return ;
+        // }
+        
+        clock1 = new Date();
+        clock2 = new Date();
+        // every time movement
+        frequency1 = 2;
+        frequency2 = 2;
+        delay1 = speedM * wait1;
+        delay2 = speedC * wait2;
+        
+        timer = setInterval(setMargin,frequency1,speedM*(1+up1),delay1);
+        timer2 = setInterval(setMargin2,frequency2,speedC*(1+up2),delay2);
+        // $('#start').attr("disabled",true);
+        // button.style.backgroundColor = 'gray';
+        // button.style.color = 'white';
+    }
+    function speed(){
+        up1 =  Math.random();
+        up2 =  0;
+        speed1 += speedM*up1;
+        speed2 += speedC*up2;
+        console.log("up1: " + up1 + " speed1: " +speed1);
+        console.log("up2: " + up2 + " speed2: " +speed2);
+    }
+  </script>
+</body>
+</html>
